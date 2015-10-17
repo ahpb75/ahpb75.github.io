@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" ng-app="todo">
+<head>
+	<title>Todo List AngularJS</title>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Angular js Todo-Sortable-List Example"/>
+	<meta name="author" content="Jay Kanakiya">
+
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/jquery-ui.min.css">
+	<link rel="stylesheet" href="css/common.css">
+
+	<script src="js/libs/jquery.min.js"></script>
+	<script src="js/libs/jquery-ui.min.js"></script>
+	<script src="js/libs/jquery.ui.touch-punch.min.js"></script>
+	<script src="js/libs/bootstrap.min.js"></script>
+	<script src="js/libs/angular.min.js"></script>
+	<script src="js/libs/angular-local-storage.min.js"></script>
+	<script src="js/libs/sortable.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/directives/angular.editInPlace.js"></script>
+	<script src="js/directives/angular.ngEnter.js"></script>
+</head>
+<body ng-controller="TodoCtrl" ng-init="init()">
+	<!-- Bootstrap Navigation Navbar-->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Todo List with AngularJS (MVC) | CMP_SC 4830 - Andrew Peth</a>
+        </div>
+      </div>
+    </div>
+
+	<div class="container" ng-controller="TodoCtrl" id="playground">
+		<div class="row">
+			<div class="col-xs-3">
+				<div class="list-group">
+					<p>Your Todo List(s)</p>
+					<a href="#" ng-repeat="todos in model" class="list-group-item" ng-class="{'active' : currentShow === $index}" ng-click="changeTodo($index)" >
+					<span class="badge">{{todos.list.length}}</span>
+					{{todos.name}}
+					</a>
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<div class="row">
+					<div class="col-xs-5">
+						<p>Filter Todo Items by Completion:</p>
+						<ul class="nav nav-pills todo-filter">
+						  <li ng-class="{'active' : show == 'All' }" ng-click="show='All'"><a href="#">All</a></li>
+						  <span class="badge">{{todos.list.length}}</span>
+						  <li ng-class="{'active' : show == 'Incomplete' }" ng-click="show='Incomplete'"><a href="#">Incomplete</a></li>
+						  <li ng-class="{'active' : show == 'Complete' }" ng-click="show='Complete'"><a href="#">Complete</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="row" id="todoAdd">
+					<div class="form-group">
+						<input class="todoField" id="newTodoField" type="text" ng-model="newTodo" placeholder="Add New Todo" ng-enter>
+						<button id="todoSubmit" class="btn btn-default" ng-click="addTodo()">Add</button>
+					</div>
+				</div>
+				<div class="row">
+					
+					<h4>Items:</h4>
+					<ul class="list-unstyled" ng-repeat="todos in model track by $index" ui-sortable="todoSortable" ng-model="todos.list" ng-show="$index === currentShow">
+						<li class="todoTask" ng-repeat="todo in todos.list | filter:showFn | filter :todoSearch ">
+							<input class="todoCheckbox" ng-model="todo.isDone" type="checkbox"> 
+							<label class="todoCheckboxlabel"></label>
+							<edit-in-place  value="todo.taskName"></edit-in-place>
+							<button type="button" class="close pull-right" aria-hidden="true" ng-click="deleteTodo(todo)">&times;</button>
+						</li>
+					</ul>
+					<p>Note: Double click an item to edit it. Click and drag items to rearrange their order.</p>
+				</div>
+			</div>
+		</div>
+		<hr/>
+
+		
+		<center><h4>Local Storage Debugger - View what's being stored</h4></center>
+		<div class="row">
+			<div class="debug">
+				<p class="text-info">{{ model | json}}</p>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
